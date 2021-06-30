@@ -28,31 +28,85 @@ describe('app routes', () => {
       return client.end(done);
     });
 
+    test('creates todos', async() => {
+      const expectation = [
+        {
+          id: 4,
+          todo: 'pay rent',
+          completed: false,
+          owner_id: 2,
+        },
+        {
+          id: 5,
+          todo: 'water plants',
+          completed: false,
+          owner_id: 2,
+        },
+        {
+          id: 6,
+          todo: 'text bae',
+          completed: false,
+          owner_id: 2,
+        }
+      ];
+
+      await fakeRequest(app)
+        .post('/api/todos')
+        .send(expectation[0])
+        .set('Authorization', token)
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+      await fakeRequest(app)
+        .post('/api/todos')
+        .send(expectation[1])
+        .set('Authorization', token)
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+      await fakeRequest(app)
+        .post('/api/todos')
+        .send(expectation[2])
+        .set('Authorization', token)
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+      const data = await fakeRequest(app)
+        .get('/api/todos')
+        .set('Authorization', token)
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+      expect(data.body).toEqual(expectation);
+    });
+
+
     test('returns todos', async() => {
 
       const expectation = [
         {
-          'id': 1,
-          'name': 'bessie',
-          'cool_factor': 3,
-          'owner_id': 1
+          id: 4,
+          todo: 'pay rent',
+          completed: false,
+          owner_id: 2,
         },
         {
-          'id': 2,
-          'name': 'jumpy',
-          'cool_factor': 4,
-          'owner_id': 1
+          id: 5,
+          todo: 'water plants',
+          completed: false,
+          owner_id: 2,
         },
         {
-          'id': 3,
-          'name': 'spot',
-          'cool_factor': 10,
-          'owner_id': 1
+          id: 6,
+          todo: 'text bae',
+          completed: false,
+          owner_id: 2,
         }
       ];
 
       const data = await fakeRequest(app)
-        .get('/todos')
+        .get('/api/todos')
+        .set('Authorization', token)
         .expect('Content-Type', /json/)
         .expect(200);
 
